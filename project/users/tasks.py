@@ -1,9 +1,10 @@
 from celery import shared_task
-from celery.contrib import rdb
 
 
 @shared_task
 def divide(x, y):
+
+    # from celery.contrib import rdb
     # rdb.set_trace()
 
     import time
