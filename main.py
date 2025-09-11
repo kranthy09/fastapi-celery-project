@@ -1,7 +1,7 @@
 from celery import Celery
-from fastapi import FastAPI
+from project import create_app
 
-app = FastAPI()
+app = create_app()
 
 
 celery = Celery(
