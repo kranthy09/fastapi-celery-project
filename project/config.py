@@ -16,6 +16,7 @@ class BaseConfig:
     CELERY_RESULT_BACKEND: str = os.environ.get(
         "CELERY_RESULT_BACKEND", "redis://127.0.0.1:6379/0"
     )  # NEW
+    CELERY_TASK_ALWAYS_EAGER: bool = False
 
 
 class DevelopmentConfig(BaseConfig):
