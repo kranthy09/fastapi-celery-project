@@ -15,6 +15,7 @@ from .tasks import (
     sample_task,
     task_process_notification,
     task_send_welcome_email,
+    task_add_subscribe,
 )
 from .models import User
 from project.database import get_db_session
@@ -40,7 +41,7 @@ def api_call(email: str):
 
 @users_router.get("/form/")
 def form_example_get(request: Request):
-    return templates.TemplateResponse("form.html", {"request": request})
+    return templates.TemplateResponse(request, "form.html")
 
 
 @users_router.post("/form/")
@@ -76,14 +77,12 @@ def webhook_test_async():
 
 @users_router.get("/form_ws/")
 def form_ws_example(request: Request):
-    return templates.TemplateResponse("form_ws.html", {"request": request})
+    return templates.TemplateResponse({request}, "form_ws.html")
 
 
 @users_router.get("/form_socketio/")
 def form_socketio_example(request: Request):
-    return templates.TemplateResponse(
-        "form_socketio.html", {"request": request}
-    )
+    return templates.TemplateResponse(request, "form_socketio.html")
 
 
 @users_router.get("/transaction_celery/")
@@ -100,3 +99,21 @@ def transaction_celery(session: Session = Depends(get_db_session)):
 
     task_send_welcome_email.delay(user.id)
     return {"message": "done"}
+
+
+@users_router.post("/user_subscribe/")
+def user_subscribe(
+    user_body: UserBody, session: Session = Depends(get_db_session)
+):
+    with session.begin():
+        user = (
+            session.query(User).filter_by(username=user_body.username).first()
+        )
+        if not user:
+            user = User(
+                username=user_body.username,
+                email=user_body.email,
+            )
+            session.add(user)
+    task_add_subscribe.delay(user.id)
+    return {"message": "send task to Celery successfully"}
