@@ -56,3 +56,27 @@ def task_process_notification(self):
 You can also set retry_backoff to a number for use as a delay factor
 
 To prevent thundering herd, celery has you covere here with `retry_jitter`. This option is set `true` by default to prevent thundering herd problem when you use celery's built-in `retry_backoff`
+
+## pytest
+
+```bash
+docker compose up -d --build
+```
+
+Run Tests:
+
+```bash
+docker compose exec web pytest
+```
+
+Coverage:
+
+```bash
+ docker compose exec web pytest --cov=.
+```
+
+HTML Report(test):
+
+```bash
+docker compose exec web pytest --cov=. --cov-report html
+```
