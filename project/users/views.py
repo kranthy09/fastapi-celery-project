@@ -77,7 +77,7 @@ def webhook_test_async():
 
 @users_router.get("/form_ws/")
 def form_ws_example(request: Request):
-    return templates.TemplateResponse({request}, "form_ws.html")
+    return templates.TemplateResponse(request, "form_ws.html")
 
 
 @users_router.get("/form_socketio/")
