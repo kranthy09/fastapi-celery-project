@@ -3,6 +3,7 @@ FROM python:3.11-slim-buster
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
+# Update sources for archived Debian Buster
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
     sed -i 's/security.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
     sed -i '/buster-updates/d' /etc/apt/sources.list && \
@@ -10,6 +11,7 @@ RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
     apt-get install -y build-essential libpq-dev telnet netcat && \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/*
+
 
 RUN addgroup --system fastapi \
     && adduser --system --ingroup fastapi fastapi
@@ -44,6 +46,8 @@ RUN chmod +x /start-flower
 
 RUN mkdir /app
 RUN mkdir /app/upload
+RUN mkdir /app/flower_db            # new
+
 WORKDIR /app
 
 # copy project code
